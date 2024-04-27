@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <thread>
 #include <mutex>
@@ -22,13 +23,19 @@ void synchronized_increment(bool my_turn, int limit)
 
 int main()
 {
+    auto start_time = std::chrono::steady_clock::now();
     std::thread t1(synchronized_increment, true, 1000);
     std::thread t2(synchronized_increment, false, 1000);
 
     t1.join();
     t2.join();
+    auto end_time = std::chrono::steady_clock::now();
 
     std::cout << "Final counter value: " << counter << std::endl;
+    std::cout << "Execution time: " 
+              << std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count() 
+              << " µs" << std::endl;
+
 
     return 0;
 }

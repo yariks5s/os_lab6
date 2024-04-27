@@ -12,7 +12,6 @@ void multiplyRowByColumn(const std::vector<std::vector<int>>& A, const std::vect
 
     C[row][col] = sum;
 
-    // Вивід результату обчислення з допомогою м'ютексу для уникнення гонки
     static std::mutex io_mutex;
     std::lock_guard<std::mutex> lock(io_mutex);
     std::cout << "[" << row << "," << col << "]=" << sum << std::endl;
@@ -41,7 +40,19 @@ int main()
     parallelMatrixMultiplication(A, B, C, n, m, k);
     auto end = std::chrono::steady_clock::now();
 
-    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    std::cout << "Total time: " << duration << " ns\n";
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    std::cout << "Total time: " << duration << " µs\n";
+
+    start = std::chrono::steady_clock::now();
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < k; ++j)
+            multiplyRowByColumn(std::cref(A), std::cref(B), std::ref(C), i, j, m);
+    }
+    end = std::chrono::steady_clock::now();
+
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    std::cout << "Total time in one thread: " << duration << " µs\n";
+
     return 0;
 }

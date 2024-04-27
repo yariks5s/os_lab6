@@ -4,7 +4,6 @@
 #include <mutex>
 #include <chrono>
 
-// Функція множення частини матриці
 void multiplyPart(const std::vector<std::vector<int>>& A, const std::vector<std::vector<int>>& B, std::vector<std::vector<int>>& C, int start, int end, int m, int k)
 {
     for (int i = start; i < end; ++i)
@@ -20,7 +19,6 @@ void multiplyPart(const std::vector<std::vector<int>>& A, const std::vector<std:
     }
 }
 
-// Функція для паралельного множення матриць
 void parallelMatrixMultiplication(const std::vector<std::vector<int>>& A, const std::vector<std::vector<int>>& B, std::vector<std::vector<int>>& C, int n, int m, int k, int num_threads)
 {
     std::vector<std::thread> threads;
@@ -41,12 +39,12 @@ void parallelMatrixMultiplication(const std::vector<std::vector<int>>& A, const 
 
 int main()
 {
-    int n = 100, m = 100, k = 100; // Розміри матриць можна змінювати
-    std::vector<std::vector<int>> A(n, std::vector<int>(m, 1)); // Прикладний заповнення
+    int n = 100, m = 100, k = 100;
+    std::vector<std::vector<int>> A(n, std::vector<int>(m, 1));
     std::vector<std::vector<int>> B(m, std::vector<int>(k, 1));
     std::vector<std::vector<int>> C(n, std::vector<int>(k, 0));
 
-    for (int num_threads = 1; num_threads <= 16; num_threads++) // Тестування для різної кількості потоків
+    for (int num_threads = 1; num_threads <= 16; num_threads++) /// Тестування для різної кількості потоків
     {
         auto start = std::chrono::steady_clock::now();
         parallelMatrixMultiplication(A, B, C, n, m, k, num_threads);
